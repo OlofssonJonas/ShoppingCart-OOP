@@ -61,7 +61,7 @@ class Cart
         $totSum = 0;
         
         foreach($this -> items as $item) {
-            $totSum += $item -> getProduct() -> getPrice();
+            $totSum += $item -> getQuantity() * $item -> getProduct() -> getPrice();
         
         }
         return $totSum;
