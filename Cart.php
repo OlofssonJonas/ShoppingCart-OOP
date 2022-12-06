@@ -1,11 +1,8 @@
 <?php
 
-
 class Cart
 {
     private array $items = [];
-    
-    
     
     //TODO Skriv getter för items
     
@@ -24,47 +21,52 @@ class Cart
     
     public function addProduct($product)
     {
-        
-        
-        $cartItems = new cartItem ($product, 1);
-        array_push($this -> items, $cartItems);
-        return $cartItems;
-    }
-    
-    
-    
-    //Skall ta bort en produkt ur kundvagnen (använd unset())
-    public function removeProduct($product)
-    {
-        
-        unset($this -> items[0]);
-        return $this -> items;
-    }
-    
-    //Skall returnera totala antalet produkter i kundvagnen
-    //OBS: Ej antalet unika produkter
-    public function getTotalQuantity()
-    {
-        $totQuantity = 0;
-        
-        foreach($this -> items as $item) {
-            $totQuantity += $item -> getQuantity();
-        
+        //spara Id på produkten. den kan vi återanvända
+        $id = $product->getId();
+
+        // vi kollar om getID finns i vår array. (omgjort till variabel)
+        if (isset($this->items[$id])) {
+            $this->items[$id]->increaseQuantity();
+        } else {
+            $CartItem = new CartItem($product, 1);
+            $this->items[$product->getId()] = $CartItem;
+
+            return $CartItem;
         }
-        return $totQuantity;
     }
-    
-    //Skall räkna ihop totalsumman för alla produkter i kundvagnen
-    //VG: Tänk på att ett cartitem kan ha olika quantity
-    public function getTotalSum() {
-        
-        $totSum = 0;
-        
-        foreach($this -> items as $item) {
-            $totSum += $item -> getQuantity() * $item -> getProduct() -> getPrice();
-        
+
+        //Skall ta bort en produkt ur kundvagnen (använd unset())
+        public function removeProduct($product)
+        {
+            unset($this->items[$product->getId()]);
+            
         }
-        return $totSum;
+        
+        //Skall returnera totala antalet produkter i kundvagnen
+        //OBS: Ej antalet unika produkter
+        public function getTotalQuantity()
+        {
+            $totQuantity = 0;
+            
+            foreach($this -> items as $item) {
+                $totQuantity += $item -> getQuantity();
+                
+            }
+            return $totQuantity;
+        }
+        
+        //Skall räkna ihop totalsumman för alla produkter i kundvagnen
+        //VG: Tänk på att ett cartitem kan ha olika quantity
+        public function getTotalSum() {
+            
+            $totSum = 0;
+            
+            foreach($this -> items as $item) {
+                $totSum += $item -> getQuantity() * $item -> getProduct() -> getPrice();
+                
+            }
+            return $totSum;
+        }
     }
+        
     
-     }
